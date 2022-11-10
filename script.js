@@ -5,11 +5,13 @@
  **************/
 
 function updateCoffeeView(coffeeQty) {
-  // your code here
+  const coffeeNumber = document.getElementById("coffee_counter");
+  coffeeNumber.innerText = coffeeQty;
 }
 
 function clickCoffee(data) {
-  // your code here
+  data.coffee++;
+  updateCoffeeView(data.coffee);
 }
 
 /**************
@@ -17,15 +19,21 @@ function clickCoffee(data) {
  **************/
 
 function unlockProducers(producers, coffeeCount) {
-  // your code here
+  producers.forEach((producer) => {
+    if (coffeeCount >= (producer.price * .5)) producer.unlocked = true;
+  })
 }
 
 function getUnlockedProducers(data) {
-  // your code here
+  return data.producers.filter((producer) => producer.unlocked === true);
 }
 
 function makeDisplayNameFromId(id) {
-  // your code here
+  const nameArray = id.split('_');
+  return nameArray.map((word) => {
+    return word[0].toUpperCase() + word.slice(1);
+  })
+  .join(' ');
 }
 
 // You shouldn't need to edit this function-- its tests should pass once you've written makeDisplayNameFromId
