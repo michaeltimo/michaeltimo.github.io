@@ -213,7 +213,8 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
     });
 
     it('correctly fills in template string', function() {
-      // Here, we make a tiny fake DOM local to this test so we can append the element returned by makeProducerdiv to it. Then, we query this tiny DOM to make some assertions about it.
+      // Here, we make a tiny fake DOM local to this test so we can append the element returned by makeProducerdiv to it. 
+      // Then, we query this tiny DOM to make some assertions about it.
       const result = code.makeProducerDiv(producer);
       const doc = new JSDOM(`<!DOCTYPE html><body></body>`).window.document;
       doc.body.appendChild(result);
@@ -248,7 +249,7 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
       `).window.document;
     });
 
-    xit('calls the `.removeChild()` method on the DOM node passed in at least once', function() {
+    it('calls the `.removeChild()` method on the DOM node passed in at least once', function() {
       const spyOnRemoveChild = sinon.spy(doc.body, 'removeChild');
       code.deleteAllChildNodes(doc.body);
       expect(spyOnRemoveChild.called).to.be.equal(true);
@@ -256,7 +257,7 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
       spyOnRemoveChild.restore();
     });
 
-    xit('gets rid of all of the children of the DOM node passed in', function() {
+    it('gets rid of all of the children of the DOM node passed in', function() {
       code.deleteAllChildNodes(doc.body);
       expect(doc.body.childNodes.length).to.be.equal(0);
     });
@@ -283,7 +284,7 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
     });
 
     // We're giving you a big hint here...
-    xit('calls document.getElementById() or document.querySelector()', function() {
+    it('calls document.getElementById() or document.querySelector()', function() {
       const spyOnGetElementById = sinon.spy(document, 'getElementById');
       const spyOnQuerySelector = sinon.spy(document, 'querySelector');
       code.renderProducers(data);
@@ -295,32 +296,35 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
     });
 
     // Big hint: Don't just render blank divs; we've written the makeProducerDiv function for you, which should be called here.
-    xit('appends some producer div elements to the producer container', function() {
+    it('appends some producer div elements to the producer container', function() {
       code.renderProducers(data);
       const producerContainer = document.getElementById('producer_container');
       // Did you generate the right number of child nodes?
       assert.isAbove(producerContainer.childNodes.length, 0);
 
-      // Here, we're just checking something about the structure of the first one to make sure it roughly matches the structure of what makeProducerDiv returns. We could have tested any number of properties of this node; however, we're just checking to make sure it has 5 children anywhere in the tree below it.
+      // Here, we're just checking something about the structure of the first one 
+      // to make sure it roughly matches the structure of what makeProducerDiv returns. 
+      // We could have tested any number of properties of this node; 
+      // however, we're just checking to make sure it has 5 children anywhere in the tree below it.
       expect(producerContainer.childNodes[0].childNodes).to.have.length(5);
     });
 
     // Hint: Call the function written to do this!
-    xit('unlocks any locked producers that need to be unlocked', function() {
+    it('unlocks any locked producers that need to be unlocked', function() {
       code.renderProducers(data);
       expect(data.producers[0].unlocked).to.be.equal(true);
       expect(data.producers[1].unlocked).to.be.equal(true);
       expect(data.producers[2].unlocked).to.be.equal(false);
     });
 
-    xit('only appends unlocked producers', function() {
+    it('only appends unlocked producers', function() {
       code.renderProducers(data);
       const producerContainer = document.getElementById('producer_container');
       expect(producerContainer.childNodes.length).to.be.equal(2);
       expect(producerContainer.childNodes[0].childNodes).to.have.length(5);
     });
 
-    xit("deletes the producer container's children before appending new producers", function() {
+    it("deletes the producer container's children before appending new producers", function() {
       const producerContainer = document.getElementById('producer_container');
       const fakeProducer = document.createElement('div');
       producerContainer.appendChild(fakeProducer);
@@ -329,7 +333,7 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
       expect(producerContainer.childNodes[0].childNodes).to.have.length(5);
     });
 
-    xit('is not in some way hardcoded to pass the tests', function() {
+    it('is not in some way hardcoded to pass the tests', function() {
       data.producers.push({ id: 'producer_D', price: 1, unlocked: true });
       const producerContainer = document.getElementById('producer_container');
       code.renderProducers(data);
@@ -340,13 +344,17 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
     });
   });
 
-  // This far into Slice 2, you've defined a function that renders the producers to the screen, with the help of some other functions. What producers are rendered depends, of course, on how much coffee the player has accumulated.
+  // This far into Slice 2, you've defined a function that renders the producers to the screen, 
+  // with the help of some other functions. What producers are rendered depends, of course, on how much coffee the player has accumulated.
 
   // While it might be passing the tests, nothing in our code yet calls the renderProducers function. How can we test it in the browser?
 
-  // Try running `renderProducers(data)` in the browser console. This might show you some producers, depending on how much coffee you have. You can click a bunch more times and run the function again to test it out, or you can just set `data.coffee` to a big number before running `renderProducers(data)`. Try that to see if the function works!
+  // Try running `renderProducers(data)` in the browser console. This might show you some producers, 
+  // depending on how much coffee you have. You can click a bunch more times and run the function again to test it out, 
+  // or you can just set `data.coffee` to a big number before running `renderProducers(data)`. Try that to see if the function works!
 
-  // How is our code actually going to run this function? That's what the next test, the last one in Slice 2, addresses; we'll go back to a function you wrote in Slice 1 and modify it, slightly.
+  // How is our code actually going to run this function? That's what the next test, the last one in Slice 2, addresses; 
+  // we'll go back to a function you wrote in Slice 1 and modify it, slightly.
   describe('The clickCoffee function', function() {
     // Clear out our fake DOM.
     beforeEach('reset the fake DOM', function() {
@@ -367,7 +375,7 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
       };
     });
 
-    xit('updates the DOM to reflect any newly unlocked producers', function() {
+    it('updates the DOM to reflect any newly unlocked producers', function() {
       code.clickCoffee(data);
       const producerContainer = document.getElementById('producer_container');
       expect(producerContainer.childNodes.length).to.be.equal(2);
@@ -375,9 +383,11 @@ describe('Slice 2: Unlocking & Rendering Producers', function() {
   });
 });
 
-// That's the end of Slice 2! In the browser, you should now have an interactive app that lets you click the coffee mug to get coffee, and renders producers to the screen as they become unlocked.
+// That's the end of Slice 2! In the browser, you should now have an interactive app that lets you click the coffee mug to get coffee, 
+// and renders producers to the screen as they become unlocked.
 
-// Next, we'll wire up the 'buy' buttons on the proucers and set up a 'tick' function that 'runs' the producers, adding coffee automatically every second based on what producers the player has!
+// Next, we'll wire up the 'buy' buttons on the proucers and set up a 'tick' function that 'runs' the producers, 
+// adding coffee automatically every second based on what producers the player has!
 
 /***************************
  *   SLICE 3 STARTS HERE
@@ -397,18 +407,18 @@ describe('Slice 3: Buying Producers & Tick', function() {
       };
     });
 
-    xit('returns an object', function() {
+    it('returns an object', function() {
       const result = code.getProducerById(data, 'producer_A');
       expect(result).to.be.an('object');
     });
-    xit('returns the correct producer object', function() {
+    it('returns the correct producer object', function() {
       const testIDs = ['producer_A', 'producer_B', 'producer_C'];
       const results = testIDs.map(testID => code.getProducerById(data, testID));
       expect(results[0].price).to.be.equal(50);
       expect(results[1].price).to.be.equal(200);
       expect(results[2].price).to.be.equal(500);
     });
-    xit('is not hardcoded to pass the tests', function() {
+    it('is not hardcoded to pass the tests', function() {
       // Just like the last test, but we've reversed the order of the producers in the data.
       data.producers = data.producers.reverse();
       const testIDs = ['producer_A', 'producer_B', 'producer_C'];
@@ -433,15 +443,15 @@ describe('Slice 3: Buying Producers & Tick', function() {
       };
     });
 
-    xit('returns a boolean', function() {
+    it('returns a boolean', function() {
       const result = code.canAffordProducer(data, 'producer_A');
       expect(result).to.be.a('boolean');
     });
-    xit('returns true if the player can afford the producer', function() {
+    it('returns true if the player can afford the producer', function() {
       const result = code.canAffordProducer(data, 'producer_A');
       expect(result).to.be.equal(true);
     });
-    xit('returns false if the player cannot afford the producer', function() {
+    it('returns false if the player cannot afford the producer', function() {
       const result = code.canAffordProducer(data, 'producer_B');
       expect(result).to.be.equal(false);
     });
@@ -453,7 +463,7 @@ describe('Slice 3: Buying Producers & Tick', function() {
       resetJSDOM();
     });
 
-    xit('calls document.getElementById() or document.querySelector()', function() {
+    it('calls document.getElementById() or document.querySelector()', function() {
       const spyOnGetElementById = sinon.spy(document, 'getElementById');
       const spyOnQuerySelector = sinon.spy(document, 'querySelector');
       code.updateCPSView(100);
@@ -464,7 +474,7 @@ describe('Slice 3: Buying Producers & Tick', function() {
       spyOnQuerySelector.restore();
     });
 
-    xit('updates the total CPS indicator to display the current total CPS', function() {
+    it('updates the total CPS indicator to display the current total CPS', function() {
       const cpsIndicator = document.getElementById('cps');
 
       code.updateCPSView(50);
@@ -476,12 +486,12 @@ describe('Slice 3: Buying Producers & Tick', function() {
   });
 
   describe('The updatePrice function', function() {
-    xit('returns an integer, not a float', function() {
+    it('returns an integer, not a float', function() {
       const result = code.updatePrice(501);
       expect(result).to.be.a('number');
       expect(result % 1).to.be.equal(0);
     });
-    xit('returns 125% of the input price, rounded down', function() {
+    it('returns 125% of the input price, rounded down', function() {
       const result = code.updatePrice(501);
       expect(result).to.be.equal(626);
     });
@@ -502,21 +512,21 @@ describe('Slice 3: Buying Producers & Tick', function() {
       };
     });
 
-    xit('returns a boolean', function() {
+    it('returns a boolean', function() {
       const result = code.attemptToBuyProducer(data, 'producer_A');
       expect(result).to.be.a('boolean');
     });
 
-    xit('returns false if the player cannot afford the producer', function() {
+    it('returns false if the player cannot afford the producer', function() {
       const result = code.attemptToBuyProducer(data, 'producer_B');
       expect(result).to.be.equal(false);
     });
-    xit('returns true if the player can afford the producer', function() {
+    it('returns true if the player can afford the producer', function() {
       const result = code.attemptToBuyProducer(data, 'producer_A');
       expect(result).to.be.equal(true);
     });
 
-    xit('increments the quantity of the producer in question only if the player can afford it', function() {
+    it('increments the quantity of the producer in question only if the player can afford it', function() {
       code.attemptToBuyProducer(data, 'producer_A');
       expect(data.producers[0].qty).to.be.equal(1);
 
@@ -524,7 +534,7 @@ describe('Slice 3: Buying Producers & Tick', function() {
       expect(data.producers[1].qty).to.be.equal(0);
     });
 
-    xit("decrements the player's coffee by the *current* price of the producer, but only if the player can afford it", function() {
+    it("decrements the player's coffee by the *current* price of the producer, but only if the player can afford it", function() {
       code.attemptToBuyProducer(data, 'producer_B');
       expect(data.coffee).to.be.equal(100);
 
@@ -533,7 +543,7 @@ describe('Slice 3: Buying Producers & Tick', function() {
     });
 
     // Hint: Use a function already written.
-    xit('updates the price of the producer to 125% of the previous price, rounded down, but only if the player can afford the producer', function() {
+    it('updates the price of the producer to 125% of the previous price, rounded down, but only if the player can afford the producer', function() {
       code.attemptToBuyProducer(data, 'producer_A');
       expect(data.producers[0].price).to.be.equal(62);
 
@@ -542,14 +552,14 @@ describe('Slice 3: Buying Producers & Tick', function() {
     });
 
     // Hint: Use a function already written.
-    xit('updates the total CPS, but only if the player can afford the producer', function() {
+    it('updates the total CPS, but only if the player can afford the producer', function() {
       code.attemptToBuyProducer(data, 'producer_A');
       expect(data.totalCPS).to.be.equal(5);
 
       code.attemptToBuyProducer(data, 'producer_B');
       expect(data.totalCPS).to.be.equal(5);
     });
-    xit("does not modify data in any way if the player tries to buy something they can't afford", function() {
+    it("does not modify data in any way if the player tries to buy something they can't afford", function() {
       const snapshot = JSON.stringify(data);
       code.attemptToBuyProducer(data, 'producer_B');
       expect(JSON.stringify(data)).to.equal(snapshot);
@@ -581,9 +591,11 @@ describe('Slice 3: Buying Producers & Tick', function() {
       };
     });
 
-    // Hint: Use the function you've already written!
-    xit('mutates the data only if the player can afford the producer', function() {
-      // `buyButtonClick` accepts a browser event argument. Here, we simulate this by creating an event object ourselves. We'll only give that fake event object the properties that are relevant for our purposes.
+    // Hint: Use the function(s) you've already written!
+    it('mutates the data only if the player can afford the producer', function() {
+      // // `buyButtonClick` accepts a browser event argument. 
+      // Here, we simulate this by creating an event object ourselves. 
+      // We'll only give that fake event object the properties that are relevant for our purposes.
 
       // This purchase should succeed.
       const snapshot = JSON.stringify(data);
@@ -599,7 +611,7 @@ describe('Slice 3: Buying Producers & Tick', function() {
     });
 
     // Hint: See https://developer.mozilla.org/en-US/docs/Web/API/Window/alert
-    xit('shows an alert box with the message "Not enough coffee!" only if the player cannot afford the producer', function() {
+    it('shows an alert box with the message "Not enough coffee!" only if the player cannot afford the producer', function() {
       const spyOnAlert = sinon.spy(window, 'alert');
 
       // This purchase should fail.
@@ -616,8 +628,10 @@ describe('Slice 3: Buying Producers & Tick', function() {
       spyOnAlert.restore();
     });
 
-    // Notice that at the bottom of `script.js` we attach an event listener that calls `buyButtonClick` not just to a buy button but to the entire producer container. Here, we test that you filter clicks so that the function pays attention only to clicks on buy buttons.
-    xit("does not modify data or show an alert box if the event passed in doesn't represent a click on a button element", function() {
+    // Notice that at the bottom of `script.js` we attach an event listener that calls `buyButtonClick` 
+    // not just to a buy button but to the entire producer container. 
+    // Here, we test that you filter clicks so that the function pays attention only to clicks on buy buttons.
+    it("does not modify data or show an alert box if the event passed in doesn't represent a click on a button element", function() {
       const spyOnAlert = sinon.spy(window, 'alert');
       const snapshot = JSON.stringify(data);
 
@@ -631,7 +645,7 @@ describe('Slice 3: Buying Producers & Tick', function() {
     });
 
     // Hint: Call a function you've already written!
-    xit('renders the updated producers when a purchase succeeds', function() {
+    it('renders the updated producers when a purchase succeeds', function() {
       const event = { target: { tagName: 'BUTTON', id: 'buy_producer_A' } };
       code.buyButtonClick(event, data);
       const producerContainer = document.getElementById('producer_container');
@@ -639,7 +653,7 @@ describe('Slice 3: Buying Producers & Tick', function() {
     });
 
     // Hint: Call a function you've already written!
-    xit('updates the coffee count on the DOM, reflecting that coffee has been spent, when a purchase succeeds', function() {
+    it('updates the coffee count on the DOM, reflecting that coffee has been spent, when a purchase succeeds', function() {
       const event = { target: { tagName: 'BUTTON', id: 'buy_producer_A' } };
       code.buyButtonClick(event, data);
       const coffeeCounter = document.getElementById('coffee_counter');

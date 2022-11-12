@@ -12,6 +12,7 @@ function updateCoffeeView(coffeeQty) {
 function clickCoffee(data) {
   data.coffee++;
   updateCoffeeView(data.coffee);
+  renderProducers(data);
 }
 
 /**************
@@ -58,11 +59,20 @@ function makeProducerDiv(producer) {
 }
 
 function deleteAllChildNodes(parent) {
-  // your code here
+  while (parent.firstChild) parent.removeChild(parent.firstChild);
 }
 
 function renderProducers(data) {
-  // your code here
+  const container = document.getElementById('producer_container');
+  deleteAllChildNodes(container);
+  unlockProducers(data.producers, data.coffee);
+  const openProducers = getUnlockedProducers(data);
+  const openProducersDivs = openProducers.map((producer) => {
+    return makeProducerDiv(producer);
+  })
+  openProducersDivs.forEach((producer) => {
+    container.appendChild(producer);
+  })
 }
 
 /**************
@@ -70,27 +80,52 @@ function renderProducers(data) {
  **************/
 
 function getProducerById(data, producerId) {
-  // your code here
+  let producer;
+  const producersArr = data.producers;
+  producersArr.forEach((element) => {
+    if (element.id === producerId) producer = element;
+  });
+  return producer;
 }
 
 function canAffordProducer(data, producerId) {
-  // your code here
+  const currentCoffee = data.coffee;
+  const currentProducer = getProducerById(data, producerId);
+  if (currentProducer.price <= currentCoffee) return true;
+  return false;
 }
 
 function updateCPSView(cps) {
-  // your code here
+  const cpsCount = document.getElementById('cps');
+  cpsCount.innerText = cps;
 }
 
 function updatePrice(oldPrice) {
-  // your code here
+  return Math.floor(oldPrice * 1.25);
 }
 
 function attemptToBuyProducer(data, producerId) {
-  // your code here
+  if (!canAffordProducer(data, producerId)) return false;
+  const producer = getProducerById(data, producerId);
+  producer.qty++;
+  data.coffee -= producer.price;
+  data.totalCPS += producer.cps;
+  producer.price = updatePrice(producer.price);
+  updateCPSView(data.totalCPS);
+  return true;
 }
 
-function buyButtonClick(event, data) {
-  // your code here
+function buyButtonClick(event, data) { // right for now...keithy says im cheating :(
+  if (event.target.id !== undefined) {
+  const producerId = event.target.id.slice(4);
+  if (attemptToBuyProducer(data, producerId)) {
+    const producer = getProducerById(producerId);
+    renderProducers(data);
+    updateCoffeeView(data.coffee -= producer.price);
+  } else {
+    window.alert('Not enough coffee!');
+  }
+  }
 }
 
 function tick(data) {
