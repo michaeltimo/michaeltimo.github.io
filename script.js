@@ -115,13 +115,12 @@ function attemptToBuyProducer(data, producerId) {
   return true;
 }
 
-function buyButtonClick(event, data) { // right for now...keithy says im cheating :(
+function buyButtonClick(event, data) {
   if (event.target.id !== undefined) {
   const producerId = event.target.id.slice(4);
   if (attemptToBuyProducer(data, producerId)) {
-    const producer = getProducerById(producerId);
+    updateCoffeeView(data.coffee);
     renderProducers(data);
-    updateCoffeeView(data.coffee -= producer.price);
   } else {
     window.alert('Not enough coffee!');
   }
@@ -129,7 +128,9 @@ function buyButtonClick(event, data) { // right for now...keithy says im cheatin
 }
 
 function tick(data) {
-  // your code here
+  data.coffee += data.totalCPS;
+  updateCoffeeView(data.coffee);
+  renderProducers(data);
 }
 
 /*************************
