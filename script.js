@@ -89,8 +89,8 @@ function getProducerById(data, producerId) {
 }
 
 function canAffordProducer(data, producerId) {
-  const currentCoffee = data.coffee;
   const currentProducer = getProducerById(data, producerId);
+  const currentCoffee = data.coffee;
   if (currentProducer.price <= currentCoffee) return true;
   return false;
 }
@@ -116,7 +116,7 @@ function attemptToBuyProducer(data, producerId) {
 }
 
 function buyButtonClick(event, data) {
-  if (event.target.id !== undefined) {
+  if (event.target.id !== 'producer_container') {
   const producerId = event.target.id.slice(4);
   if (attemptToBuyProducer(data, producerId)) {
     updateCoffeeView(data.coffee);
