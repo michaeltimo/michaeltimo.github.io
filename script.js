@@ -116,6 +116,7 @@ function attemptToBuyProducer(data, producerId) {
 }
 
 function buyButtonClick(event, data) {
+  if (event.target.id) {
   if (event.target.id !== 'producer_container') {
   const producerId = event.target.id.slice(4);
   if (attemptToBuyProducer(data, producerId)) {
@@ -125,6 +126,7 @@ function buyButtonClick(event, data) {
     window.alert('Not enough coffee!');
   }
   }
+}
 }
 
 function tick(data) {
